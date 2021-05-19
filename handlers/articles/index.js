@@ -14,15 +14,14 @@ module.exports = {
     viewArticle(req, res, next) {
       const { id } = req.params
 
-      Article.findById(id).then((article) => {
-        console.log(article);
-        console.log(req.user);
+      Article.findById(id).populate('author').lean().then((article) => {
         res.render('./posts/postView', {
           isLoggedIn: req.user !== undefined,
           title: article.title,
           meta: article.meta,
           img: article.img,
-          post: article.post
+          post: article.post,
+          author: article.author.username
         })
       })
     }
@@ -34,6 +33,7 @@ module.exports = {
         post, 
         metaDescription,
         indexFollow,
+        postImg,
         noindexFollow,
         noindexNofollow
       } = req.body
@@ -45,7 +45,7 @@ module.exports = {
       
       const meta = `<meta name="description" content="${metaDescription}"/>`
 
-      Article.create({date, title, post, meta, robots, author: _id})
+      Article.create({date, title, postImg, post, meta, robots, author: _id})
         .then(() => {
           res.redirect('/home')
         }).catch((err) => {
