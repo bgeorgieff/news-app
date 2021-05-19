@@ -6,7 +6,7 @@ module.exports = () => {
   return mongoose.connect(dbString, {
     useNewUrlParser: true,
     useUnifiedTopology: true, 
-    useCreateIndex: true
+    useCreateIndex: true,
   },
     console.log(rdyString)
   )

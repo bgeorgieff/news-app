@@ -7,6 +7,11 @@
   </div>
   <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav navbar-left ml-auto">
+      {{#if isLoggedIn}}
+      <li class="nav-item">
+        <a class="nav-link text-light" href="/createArticle/create">Create Article</a>
+      </li>
+      {{/if}}
       <li class="nav-item">
         <a class="nav-link text-light" href="#">Movies</a>
       </li>
