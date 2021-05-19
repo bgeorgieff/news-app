@@ -4,9 +4,21 @@ const { Schema, model: Model } = mongoose
 const { String, ObjectId } = Schema.Types
 
 const articleModel = new Schema({
+  date: Date,
+  title: {
+    type: String,
+    required: true
+  },
   post: {
     type: String,
     required: true
+  },
+  postImg: {
+    type: String,
+    required: true
+  },
+  robots: {
+    type: String
   },
   meta: {
     type: String,
