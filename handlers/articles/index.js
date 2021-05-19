@@ -10,11 +10,27 @@ module.exports = {
       res.render('./posts/post-add', {
         isLoggedIn: req.user !== undefined
       })
+    }, 
+    viewArticle(req, res, next) {
+      const { id } = req.params
+
+      Article.findById(id).then((article) => {
+        console.log(article);
+        console.log(req.user);
+        res.render('./posts/postView', {
+          isLoggedIn: req.user !== undefined,
+          title: article.title,
+          meta: article.meta,
+          img: article.img,
+          post: article.post
+        })
+      })
     }
   },
   post: {
     postArticle(req, res, next) {
       const {
+        title,
         post, 
         metaDescription,
         indexFollow,
@@ -23,12 +39,13 @@ module.exports = {
       } = req.body
 
       const _id = req.user
+      const date = new Date()
 
       const robots = noindexFollow + indexFollow + noindexNofollow
       
       const meta = `<meta name="description" content="${metaDescription}"/>`
 
-      Article.create({post, meta, robots, author: _id})
+      Article.create({date, title, post, meta, robots, author: _id})
         .then(() => {
           res.redirect('/home')
         }).catch((err) => {
