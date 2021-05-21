@@ -7,7 +7,14 @@
     </div>
     <div class="col-sm-12 col-md-12 col-lg-8 recent-article-container">
       <h3 class="recent-title">{{title}}</h3>
-      <div class="recent-article">{{{post}}} ... <a href="/viewArticle/{{_id}}">Read More</a></div>
+      <div class="recent-article">
+        <section>{{{post}}}<a href="/article/post/{{_id}}">Read More</a></section>
+      </div>
+      {{!-- {{#if isLoggedIn}}
+      <div>
+        <a href="/article/edit-post/{{_id}}">Edit</a>
+      </div>
+      {{/if}} --}}
     <div class="divider"></div>
     </div>
   </div>
