@@ -4,7 +4,10 @@ const { Schema, model: Model } = mongoose
 const { String, ObjectId } = Schema.Types
 
 const articleModel = new Schema({
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now
+  },
   title: {
     type: String,
     required: true
@@ -27,6 +30,12 @@ const articleModel = new Schema({
   author: {
     type: ObjectId,
     ref: 'User'
+  },
+  views: {
+    type: Number
+  },
+  category: {
+    type: String
   }
 })
 
