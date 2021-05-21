@@ -1,7 +1,6 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const handlebars = require('express-handlebars')
-const {urlencoded} = require('body-parser')
 
 
 module.exports = (app) => {
