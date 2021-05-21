@@ -21,11 +21,26 @@ module.exports = {
           meta: article.meta,
           img: article.img,
           post: article.post,
+          author: article.author.username,
+          id: id
+        })
+      })
+    },
+    editArticle(req, res, next) {
+      const { id } = req.params
+      
+      Article.findById(id).lean().then((article) => {
+        res.render('./posts/post-add', {
+          isLoggedIn: req.user !== undefined,
+          title: article.title,
+          meta: article.meta,
+          img: article.img,
+          post: article.post,
           author: article.author.username
         })
       })
     }
-  },
+  }, 
   post: {
     postArticle(req, res, next) {
       const {

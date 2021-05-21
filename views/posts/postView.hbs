@@ -10,3 +10,9 @@
     {{author}}
   </div>
 </div>
+      {{#if isLoggedIn}}
+      <div>
+        <a href="/article/edit-post/{{id}}">Edit</a>
+      </div>
+      {{/if}}
+{{> asideTrending}}

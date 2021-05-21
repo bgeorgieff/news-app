@@ -3,10 +3,9 @@ const routes = require('../routes')
 module.exports = (app) => {
 	app.use('/', routes.home)   
 	app.use('/user', routes.users)
-	app.use('/createArticle', routes.article)
-	app.use('/viewArticle', routes.article)
+	app.use('/article', routes.article)
 
-	app.use('*', () => {
-		console.log('this is not the webpage you are looking for')
+	app.use(function(req, res) {
+    res.status(404).end('this is not the page you are looking for');
 	})
 }
