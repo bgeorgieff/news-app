@@ -1,21 +1,21 @@
 <section class="py-5">
   <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
   <div class="container">
-    <h1 style="margin: 2%; text-align: center;">Create Post</h1>
-    <form method="POST" action="/article/create">
+    <h1 style="margin: 2%; text-align: center;">Edit Post</h1>
+    <form method="POST" action="/article/edit-post/{{id}}">
       <div class="form-group">
-        <label for="Title">Title</label>
+        <label for="Title">{{title}}</label>
         <input type="text" name="title" class="form-control" id="title" placeholder="title" value="Title">
       </div>
       <div class="form-group">
-        <label for="Header Image">Header Image</label>
+        <label for="Header Image">{{img}}</label>
         <input type="text" name="postImg" class="form-control" id="image" placeholder="image" value="image">
       </div>
       <div class="form-group">
-        <textarea name="post"></textarea>
+        <textarea name="post">{{post}}</textarea>
       </div>
       <div class="form-group">
-        <label for="metadescription">Meta</label>
+        <label for="metadescription">{{meta}}</label>
         <input type="text" name="noindexNofollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - noindex, nofollow">
         <input type="text" name="indexFollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - index, follow">
         <input type="text" name="noindexFollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - noindex, follow">
@@ -23,6 +23,7 @@
         <input type="text" name="metaDescription" class="form-control" id="metadescription" placeholder="metadescription" value="meta description">
       </div>
       <div>
+        <a href={{this.id}}>TEST BUTTON</a>
         <button>Post</button>
       </div>
       <script>
