@@ -5,9 +5,14 @@ module.exports = {
     home(req, res, next) {
 
       Articles.find().sort({date:-1}).lean().then((article) => {
+        const trendingArticles = article
+        
+        trendingArticles.sort((a, b) => b.views - a.views).splice(5)
+        
         res.render('home', {
           isLoggedIn: req.user !== undefined,
-          article
+          article,
+          trendingArticles
         })
       })
     }
