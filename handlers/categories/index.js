@@ -1,17 +1,18 @@
 const Categories = require('./Categories')
+const Article = require('../articles/Article')
 
-const getCategories = () => {
-  const categories =  Categories.find().lean()
+const getCategories = async () => {
+  const categories = await Categories.find().lean()
 
   return categories
 }
 
-const getCategoriesByName = (category) => {
-  console.log(category, 'this is our category');
-  const categories = Categories.findOne({ category: category })
+const getArticlesWithCategories = async (id) => {
+  const article = await Article.findById(id).populate('category').lean()
 
-  console.log(categories.id, "this is the place where we get all articles by name");
+  return article
 }
+
 
 // Alternative Approach for creating category
 // const createCategory = async () => {
@@ -20,5 +21,5 @@ const getCategoriesByName = (category) => {
 
 module.exports = {
   getCategories,
-  getCategoriesByName
+  getArticlesWithCategories
 }

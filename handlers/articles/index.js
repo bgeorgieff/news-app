@@ -6,7 +6,7 @@
 
 const { validationResult } = require('express-validator')
 const Article = require('./Article')
-const {getCategories, getCategoriesByName} = require('../categories')
+const {getCategories, getArticlesWithCategories } = require('../categories')
 const Categories = require('../categories/Categories')
 
 module.exports = {
@@ -42,10 +42,12 @@ module.exports = {
         })
       })
     },
-    editArticleView(req, res, next) {
+    async editArticleView(req, res, next) {
       const { id } = req.params
 
-      Article.findById(id).lean().then((article) => {
+      const allCategories = await getCategories()
+
+      Article.findById(id).lean().populate('category').then((article) => {
         res.render('./posts/editArticle', {
           isLoggedIn: req.user !== undefined,
           title: article.title,
@@ -53,14 +55,15 @@ module.exports = {
           img: article.img,
           post: article.post,
           author: article.author.username,
-          id: id
-          
+          id: id,
+          categories: article.category,
+          allCategories
         })
       })
     }
   }, 
   post: {
-    async postArticle(req, res, next) {
+    postArticle(req, res, next) {
       const {
         title,
         post, 
@@ -102,7 +105,7 @@ module.exports = {
     }
   },
   put: {
-    editArticle(req, res, next) {
+    async editArticle(req, res, next) {
       const { id } = req.params
       const {
         title,
@@ -111,23 +114,34 @@ module.exports = {
         indexFollow,
         postImg,
         noindexFollow,
-        noindexNofollow
+        noindexNofollow,
+        allCategories
       } = req.body
+      console.log(allCategories);
+      const category = await getCategories()
 
+      const filteredCategories = category.filter(e => {
+        const categoryId = e._id.valueOf().toString()
+        return !categoryId.includes(allCategories)
+      })
 
-      Article.findByIdAndUpdate(id, {
-        title,
-        post, 
-        meta: metaDescription,
-        postImg,
-      }).then(() => {
-        res.redirect('/home')
+      Article.updateMany({_id: id}, {$set: {title, post, meta: metaDescription, postImg, category: allCategories}})
+        .then(() => {
+        Promise.all([
+          Categories.updateMany({_id: allCategories}, {$addToSet: {article: id}}),
+          Categories.updateMany({_id: filteredCategories}, {$pullAll: {article: [id]}})
+        ]).then(() => {
+          res.redirect('/home')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
       })
     }
   },
   delete: {
     deleteArticle(req, res, next) {
-      const {id} = req.params
+      const { id } = req.params
 
       Article.deleteOne({ _id: id}).then(() => {
         res.redirect('/home')

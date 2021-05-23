@@ -43,25 +43,35 @@ const articleModel = new Schema({
   }]
 })
 
-articleModel.pre('save', async function(next) {
+articleModel.pre('save', function(next) {
   const author = this.author._id
   const article = this._id
 
-  User.findOneAndUpdate({_id: author}, {$push: {articleHistory: article}})
+  User.findOneAndUpdate({_id: author}, {$addToSet: {articleHistory: article}})
     .then(() => {
       next()
     }).catch((err) => console.log(err))
 })
 
-articleModel.pre('save', async function(next) {
+articleModel.pre('save', function(next) {
   const article = this._id
   const categoryAddArray = this.category
 
-  Categories.updateMany({_id: categoryAddArray}, {$push: {article: article}}).then(() => {
+  Categories.updateMany({_id: categoryAddArray}, {$addToSet: {article: article}}).then(() => {
     next()
-  })
+  }).catch((err) => console.log(err))
 
 })
+
+// articleModel.pre('save', function(next) {
+//   const article = this.id
+//   const categoryAddArray = this.category
+
+//   Categories.updateMany({_id: categoryAddArray}, {$set: {article: article}}).then(() => {
+//     console.log('reached!');
+//     next()
+//   })
+// })
 
 
 articleModel.plugin(mongoosePaginate)
