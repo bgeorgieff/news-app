@@ -2,7 +2,35 @@
   <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
   <div class="container">
     <h1 style="margin: 2%; text-align: center;">Edit Post</h1>
+      <form method="POST" action="/article/create/create-category">
+        <div>
+          <label for="Category">Category</label>
+          <input type="text" name="newCategory" class="form-control" id="category" placeholder="New Category" value="New Category">
+        </div>
+        <button>Add Category</button>
+      </form>  
+            <select multiple name="addCategory">
+        <option value="" disabled selected>Select your option</option>
+        {{#if categories}}
+        {{#each categories}}
+        <option value="{{_id}}">{{name}}</option>
+        {{/each}}
+        {{else}}
+        <option value="noCategories">-- No Categories --</option>
+        {{/if}}
+      </select>
     <form method="POST" action="/article/edit-post/{{id}}">
+
+            <select multiple name="allCategories">
+        <option value="" disabled selected>Select your option</option>
+        {{#if allCategories}}
+        {{#each allCategories}}
+        <option value="{{_id}}">{{name}}</option>
+        {{/each}}
+        {{else}}
+        <option value="noCategories">-- No Categories --</option>
+        {{/if}}
+      </select>
       <div class="form-group">
         <label for="Title">{{title}}</label>
         <input type="text" name="title" class="form-control" id="title" placeholder="title" value="Title">
