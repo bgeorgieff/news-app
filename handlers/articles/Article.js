@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 const User = require('../user/User')
 const { Schema, model: Model } = mongoose
 const { String, ObjectId } = Schema.Types
+const mongoosePaginate = require('mongoose-paginate-v2')
+const Categories = require('../categories/Categories')
+const {getCategories} = require('../categories')
 
 const articleModel = new Schema({
   date: {
@@ -34,20 +37,33 @@ const articleModel = new Schema({
   views: {
     type: Number
   },
-  category: {
-    type: String
-  }
+  category: [{
+    type: ObjectId,
+    ref: 'Categories'
+  }]
 })
 
-articleModel.pre('save', function(next) {
+articleModel.pre('save', async function(next) {
   const author = this.author._id
   const article = this._id
 
   User.findOneAndUpdate({_id: author}, {$push: {articleHistory: article}})
     .then(() => {
       next()
-    })
+    }).catch((err) => console.log(err))
+})
+
+articleModel.pre('save', async function(next) {
+  const article = this._id
+  const categoryAddArray = this.category
+
+  Categories.updateMany({_id: categoryAddArray}, {$push: {article: article}}).then(() => {
+    next()
+  })
 
 })
+
+
+articleModel.plugin(mongoosePaginate)
 
 module.exports = new Model('Articles', articleModel)
