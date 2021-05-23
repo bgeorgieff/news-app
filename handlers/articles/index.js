@@ -1,14 +1,23 @@
-const User = require('../user/User')
+// TODO 
+// create article - user cross-reference 
+// Refactor code - remove ASYNC func into handlers - categories/index
+// add separete path in Routes/categories/ handler.get.category
+// add pagination for front page
+
 const { validationResult } = require('express-validator')
 const Article = require('./Article')
-const { secret } = require('../../config/config')
-const jwt = require('jsonwebtoken')
+const {getCategories, getCategoriesByName} = require('../categories')
+const Categories = require('../categories/Categories')
 
 module.exports = {
   get: {
-    postArticle(req, res, next) {
+    async postArticle(req, res, next) {
+
+      const categories = await getCategories()
+
       res.render('./posts/post-add', {
-        isLoggedIn: req.user !== undefined
+        isLoggedIn: req.user !== undefined,
+        categories,
       })
     }, 
     viewArticle(req, res, next) {
@@ -35,15 +44,6 @@ module.exports = {
     },
     editArticleView(req, res, next) {
       const { id } = req.params
-      const {
-        title,
-        meta,
-        img,
-        post,
-        author
-      } = req.body
-
-      console.log(req.body);
 
       Article.findById(id).lean().then((article) => {
         res.render('./posts/editArticle', {
@@ -60,7 +60,7 @@ module.exports = {
     }
   }, 
   post: {
-    postArticle(req, res, next) {
+    async postArticle(req, res, next) {
       const {
         title,
         post, 
@@ -68,23 +68,38 @@ module.exports = {
         indexFollow,
         postImg,
         noindexFollow,
-        noindexNofollow
+        noindexNofollow,
+        addCategory
       } = req.body
 
       const _id = req.user
       const date = new Date()
-
+      
       const robots = noindexFollow + indexFollow + noindexNofollow
       
       const meta = `<meta name="description" content="${metaDescription}"/>`
-
-      Article.create({date, title, postImg, post, meta, robots, author: _id, views: 0})
-        .then(() => {
+      
+      Article.create({ 
+        date, 
+        title, 
+        postImg, 
+        post, 
+        meta, 
+        robots, 
+        author: _id, 
+        views: 0,
+        category: addCategory
+      }).then(() => {
           res.redirect('/home')
         }).catch((err) => {
           console.log(err);
         })
     },
+    addCategory(req, res, next) {
+      const { newCategory } = req.body
+
+      Categories.create({ name: newCategory }).then(() => res.redirect('/article/create'))
+    }
   },
   put: {
     editArticle(req, res, next) {
@@ -98,7 +113,7 @@ module.exports = {
         noindexFollow,
         noindexNofollow
       } = req.body
-      console.log(req.body);
+
 
       Article.findByIdAndUpdate(id, {
         title,
@@ -114,7 +129,7 @@ module.exports = {
     deleteArticle(req, res, next) {
       const {id} = req.params
 
-      Article.deleteOne({ _id: id}).then((e) => {
+      Article.deleteOne({ _id: id}).then(() => {
         res.redirect('/home')
       })
     }

@@ -2,7 +2,27 @@
   <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
   <div class="container">
     <h1 style="margin: 2%; text-align: center;">Create Post</h1>
+      <div>
+
+        <form method="POST" action="/article/create/create-category">
+          <div>
+            <label for="Category">Category</label>
+            <input type="text" name="newCategory" class="form-control" id="category" placeholder="New Category" value="New Category">
+          </div>
+          <button>Add Category</button>
+        </form>      
+      </div>
     <form method="POST" action="/article/create">
+      <select multiple name="addCategory">
+        <option value="" disabled selected>Select your option</option>
+        {{#if categories}}
+        {{#each categories}}
+        <option value="{{_id}}">{{name}}</option>
+        {{/each}}
+        {{else}}
+        <option value="noCategories">-- No Categories --</option>
+        {{/if}}
+      </select>
       <div class="form-group">
         <label for="Title">Title</label>
         <input type="text" name="title" class="form-control" id="title" placeholder="title" value="Title">
@@ -31,3 +51,11 @@
     </form>
   </div>
 </section>
+  {{!-- <link rel="stylesheet" href="/dist/vanillaSelectBox.css" type="text/css">   --}}
+  {{!-- <script type="text/javascript" src="/dist/vanillaSelectBox.js"></script>   --}}
+  {{!-- <script>
+    let mySelect = new vanillaSelectBox("#example",{
+      search: true
+    }) --}}
+
+  </script>
