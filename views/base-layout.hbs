@@ -1,26 +1,58 @@
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="/dist/css/bootstrap.css" type="text/css">
-  <link rel="stylesheet" href="/dist/styles.css" type="text/css">
-  <link rel="stylesheet" href="/dist/vanillaSelectBox.css" type="text/css">  
-  <title>{{title}}</title>
-</head>
-<body class="homePageHolder">
-  <div id="main-holder">
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="description" content="Magz is a HTML5 & CSS3 magazine template is based on Bootstrap 3.">
+		<meta name="author" content="Kodinger">
+		<meta name="keyword" content="magz, html5, css3, template, magazine template">
+		<!-- Shareable -->
+		<meta property="og:title" content="HTML5 & CSS3 magazine template is based on Bootstrap 3" />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content="http://github.com/nauvalazhar/Magz" />
+		<meta property="og:image" content="https://raw.githubusercontent.com/nauvalazhar/Magz/master/images/preview.png" />
+		<title>Magz &mdash; Responsive HTML5 &amp; CSS3 Magazine Template</title>
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="/dist/scripts/bootstrap/bootstrap.min.css">
+		<!-- IonIcons -->
+		<link rel="stylesheet" href="/dist/scripts/ionicons/css/ionicons.min.css">
+		<!-- Toast -->
+		<link rel="stylesheet" href="/dist/scripts/toast/jquery.toast.min.css">
+		<!-- OwlCarousel -->
+		<link rel="stylesheet" href="/dist/scripts/owlcarousel/dist/assets/owl.carousel.min.css">
+		<link rel="stylesheet" href="/dist/scripts/owlcarousel/dist/assets/owl.theme.default.min.css">
+		<!-- Magnific Popup -->
+		<link rel="stylesheet" href="/dist/scripts/magnific-popup/dist/magnific-popup.css">
+		<link rel="stylesheet" href="/dist/scripts/sweetalert/dist/sweetalert.css">
+		<!-- Custom style -->
+		<link rel="stylesheet" href="/dist/css/style.css">
+		<link rel="stylesheet" href="/dist/css/skins/all.css">
+		<link rel="stylesheet" href="/dist/css/demo.css">
+    <link rel="stylesheet" href="/dist/styles.css" type="text/css">
+    <link rel="stylesheet" href="/dist/vanillaSelectBox.css" type="text/css">
+	</head>
+
+	<body class="skin-orange">
     {{> navbar}}
     {{{body}}}
     {{> footer}}
-  </div>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="/dist/js/bootstrap.js"></script>
-  <script type="text/javascript" src="/dist/onScroll.js"></script>  
-  <script type="text/javascript" src="/dist/vanillaSelectBox.js"></script>  
-</body>
+		<!-- JS -->
+		<script src="/dist/js/jquery.js"></script>
+		<script src="/dist/js/jquery.migrate.js"></script>
+		<script src="/dist/scripts/bootstrap/bootstrap.min.js"></script>
+		<script>var $target_end=$(".best-of-the-week");</script>
+		<script src="/dist/scripts/jquery-number/jquery.number.min.js"></script>
+		<script src="/dist/scripts/owlcarousel/dist/owl.carousel.min.js"></script>
+		<script src="/dist/scripts/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+		{{!-- <script src="/dist/scripts/easescroll/jquery.easeScroll.js"></script> --}}
+		<script src="/dist/scripts/sweetalert/dist/sweetalert.min.js"></script>
+		<script src="/dist/scripts/toast/jquery.toast.min.js"></script>
+    {{!-- <script type="text/javascript" src="/dist/onScroll.js"></script>   --}}
+    <script type="text/javascript" src="/dist/vanillaSelectBox.js"></script> 
+		{{!-- <script src="/dist/js/demo.js"></script> --}}
+		<script src="/dist/js/e-magz.js"></script>
+	</body>
 </html>
-
 

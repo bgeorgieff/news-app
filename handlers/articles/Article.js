@@ -4,7 +4,6 @@ const { Schema, model: Model } = mongoose
 const { String, ObjectId } = Schema.Types
 const mongoosePaginate = require('mongoose-paginate-v2')
 const Categories = require('../categories/Categories')
-const {getCategories} = require('../categories')
 
 const articleModel = new Schema({
   date: {
@@ -62,17 +61,6 @@ articleModel.pre('save', function(next) {
   }).catch((err) => console.log(err))
 
 })
-
-// articleModel.pre('save', function(next) {
-//   const article = this.id
-//   const categoryAddArray = this.category
-
-//   Categories.updateMany({_id: categoryAddArray}, {$set: {article: article}}).then(() => {
-//     console.log('reached!');
-//     next()
-//   })
-// })
-
 
 articleModel.plugin(mongoosePaginate)
 
