@@ -1,9 +1,3 @@
-// TODO 
-// create article - user cross-reference 
-// Refactor code - remove ASYNC func into handlers - categories/index
-// add separete path in Routes/categories/ handler.get.category
-// add pagination for front page
-
 const { validationResult } = require('express-validator')
 const Article = require('./Article')
 const {getCategories, getArticlesWithCategories } = require('../categories')
