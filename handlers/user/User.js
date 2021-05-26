@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const { ObjectID } = require('bson')
 const { Schema, model: Model } = mongoose
-const { String, ObjectId } = Schema.Types
+const { String, ObjectId, Boolean } = Schema.Types
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 
@@ -18,11 +17,15 @@ const userSchema = new Schema({
   articleHistory: [{
     type: ObjectId,
     ref: 'Articles'
-  }]
+  }],
+	isAdmin: {
+		type: Boolean,
+		default: false
+	}
 })
 
 userSchema.methods = {
-	passwordMatch(password) {
+	passwordMatch(password, adminSecret) {
 		return bcrypt.compare(password, this.password)
 	}
 }
@@ -49,5 +52,6 @@ userSchema.pre('save', function(next) {
 	
 	next()
 })
+
 
 module.exports = new Model('User', userSchema)

@@ -13,12 +13,6 @@ const getArticlesWithCategories = async (id) => {
   return article
 }
 
-
-// Alternative Approach for creating category
-// const createCategory = async () => {
-//   const categories = await 
-// }
-
 module.exports = {
   getCategories,
   getArticlesWithCategories

@@ -2,6 +2,7 @@
   const jwt = require('../../utils/jwt')
   const { cookie } = require('../../config/config')
   const { secret } = require('../../config/config') 
+  const { adminValidation } = require('../../utils/helpers')
 
 module.exports = {
   get: {
@@ -41,16 +42,19 @@ module.exports = {
 
     },
     register (req, res, next) {
-      const {username, password, rePassword} = req.body
+      const {username, password, rePassword, adminAuth} = req.body
+  
+      const isAuthenticated = adminValidation(adminAuth)
 
+      // TODO IMPLEMENT MESSAGES ON WEBPAGE
       if(password !== rePassword) {
         return res.render('./users/register.hbs', {
             message: "Your passwords don't match",
-            oldDetails: {email, password, rePassword}
+            oldDetails: {username, password, rePassword}
         })
       }
-      
-      User.create({username, password})
+
+      User.create({username, password, isAdmin: isAuthenticated})
         .then((user) => {
           const token = jwt.createToken(user)
           res
