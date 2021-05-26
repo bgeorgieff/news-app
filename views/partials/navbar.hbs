@@ -24,7 +24,12 @@
 				<div class="col-md-3 col-sm-12 text-right">
 					<ul class="nav-icons">
 						{{#if isLoggedIn}}
-						<li><a href="/user/logout"><i class="ion-person"></i><div>Logout</div></a></li>
+							{{#if isAdmin}}
+							<li><a href="/article/create"><i class="ion-person"></i><div>Create Post</div></a></li>
+							<li><a href="/user/logout"><i class="ion-person"></i><div>Logout</div></a></li>
+							{{else}}
+							<li><a href="/user/logout"><i class="ion-person"></i><div>Logout</div></a></li>
+							{{/if}}
 						{{else}}
 						<li><a href="/user/register"><i class="ion-person-add"></i><div>Register</div></a></li>
 						<li><a href="/user/login"><i class="ion-person"></i><div>Login</div></a></li>

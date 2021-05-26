@@ -21,7 +21,7 @@
       </select>
     <form method="POST" action="/article/edit-post/{{id}}">
 
-            <select multiple name="allCategories">
+      <select multiple name="allCategories">
         <option value="" disabled selected>Select your option</option>
         {{#if allCategories}}
         {{#each allCategories}}
@@ -38,6 +38,10 @@
       <div class="form-group">
         <label for="Header Image">{{img}}</label>
         <input type="text" name="postImg" class="form-control" id="image" placeholder="image" value="image">
+      </div>
+      <div class="form-group">
+        <label for="Header Image">Text Snippet</label>
+        <input type="text" name="textSnippet" class="form-control" id="image" placeholder="image" value="image">
       </div>
       <div class="form-group">
         <textarea name="post">{{post}}</textarea>

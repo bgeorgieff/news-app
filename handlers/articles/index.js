@@ -20,6 +20,8 @@ module.exports = {
       Article.findById(id).populate('author').lean().then((article) => {
         const views = article.views + 1
 
+        const {isAdmin} = req.user || false
+
         Article.findByIdAndUpdate(id, {
           views: views
         })
@@ -30,7 +32,11 @@ module.exports = {
             meta: article.meta,
             img: article.img,
             post: article.post,
+            views: article.views,
+            date: article.date,
+            snippet: article.textSnippet,
             author: article.author.username,
+            isAdmin,
             id: id
           })  
         })
@@ -66,11 +72,15 @@ module.exports = {
         postImg,
         noindexFollow,
         noindexNofollow,
-        addCategory
+        addCategory,
+        textSnippet
       } = req.body
 
       const _id = req.user
       const date = new Date()
+
+      // Text Snippet size = 250 symbols
+      // const textSnippety = {...textSnippet}.splice(5)
       
       const robots = noindexFollow + indexFollow + noindexNofollow
       
@@ -84,6 +94,7 @@ module.exports = {
         meta, 
         robots, 
         author: _id, 
+        textSnippet,
         views: 0,
         category: addCategory
       }).then(() => {
@@ -109,9 +120,10 @@ module.exports = {
         postImg,
         noindexFollow,
         noindexNofollow,
-        allCategories
+        allCategories,
+        textSnippet
       } = req.body
-      console.log(allCategories);
+
       const category = await getCategories()
 
       const filteredCategories = category.filter(e => {
@@ -119,12 +131,12 @@ module.exports = {
         return !categoryId.includes(allCategories)
       })
 
-      Article.updateMany({_id: id}, {$set: {title, post, meta: metaDescription, postImg, category: allCategories}})
+      Article.updateOne({_id: id}, {$set: {title, post, meta: metaDescription, textSnippet, postImg, category: allCategories}})
         .then(() => {
-        Promise.all([
-          Categories.updateMany({_id: allCategories}, {$addToSet: {article: id}}),
-          Categories.updateMany({_id: filteredCategories}, {$pullAll: {article: [id]}})
-        ]).then(() => {
+          Promise.all([
+            Categories.updateMany({_id: allCategories}, {$addToSet: {article: id}}),
+            Categories.updateMany({_id: filteredCategories}, {$pullAll: {article: [id]}})
+          ]).then(() => {
           res.redirect('/home')
         })
         .catch((err) => {

@@ -18,6 +18,10 @@ const articleModel = new Schema({
     type: String,
     required: true
   },
+  textSnippet: {
+    type: String,
+    required: true
+  },
   postImg: {
     type: String,
     required: true
