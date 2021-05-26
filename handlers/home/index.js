@@ -5,9 +5,9 @@ module.exports = {
     async home(req, res, next) {
 
 
-      Articles.paginate({}, {select: 'title', offset: 3, limit: 2 }).then((result) => {
-        console.log(result);
-      })
+      // Articles.paginate({}, {select: 'title', offset: 3, limit: 2 }).then((result) => {
+      //   console.log(result);
+      // })
 
       Articles.find().sort({date:-1}).lean().then((article) => {
         const trendingArticles = [...article]
