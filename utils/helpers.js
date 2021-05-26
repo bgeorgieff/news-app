@@ -2,7 +2,7 @@ const adminSecret = require('../config/config').adminSecret
 
 const adminValidation = (data) => {
   if (data === adminSecret) {
-    return !!adminAuth
+    return !!data
   } else {
     return false
   }

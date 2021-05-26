@@ -1,31 +1,47 @@
 
-    {{#each article}}
-<div class="col-md-6 col-sm-6 col-xs-12">
-  <div class="row">
-    <article class="article col-md-12">
-      <div class="inner">
-        <figure>
-          <a href="single.html">
-            <img src="https://i.etsystatic.com/11472978/r/il/a9b094/1411198679/il_570xN.1411198679_ib10.jpg" alt="Sample Article">
-          </a>
-        </figure>
-        <div class="padding">
-          <div class="detail">
-            <div class="time">December 10, 2016</div>
-            <div class="category"><a href="category.html">Healthy</a></div>
-          </div>
-          <h2><a href="single.html">{{ title }}</a></h2>
-          <p>{{{ post }}}</p>
-          <footer>
-            <a href="#" class="love"><i class="ion-android-favorite-outline"></i> <div>1263</div></a>
-            <a class="btn btn-primary more" href="single.html">
-              <div>More</div>
-              <div><i class="ion-ios-arrow-thin-right"></i></div>
+
+<div class="row">
+  {{#each article}}
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="row">
+      <article class="article col-md-12">
+        <div class="inner">
+          <figure>
+            <a href="/article/post/{{_id}}">
+              <img src="{{postImg}}" alt="{{alt}}">
             </a>
-          </footer>
+          </figure>
+          <div class="padding">
+            <div class="detail">
+              <div class="time">{{date}}</div>
+              <div>TEST AREA</div>
+              {{#each category}}
+                {{category.name}}
+              {{/each}}
+              <div class="category"><a href="category.html">{{category.name}}</a></div>
+              <div class="category"><a href="category.html">{{category}}</a></div>
+              <div class="category"><a href="category.html">{{this.category.name}}</a></div>
+            </div>
+            <h2><a href="/article/post/{{_id}}">{{title}}</a></h2>
+            <p>{{textSnippet}}</p>
+            <footer>
+              <a href="#" class="love"><i class="ion-android-favorite-outline"></i> <div>1263</div></a>
+              <a class="btn btn-primary more" href="/article/post/{{_id}}">
+                <div>More</div>
+                <div><i class="ion-ios-arrow-thin-right"></i></div>
+              </a>
+              {{#if isLoggedIn}}
+              <a class="btn btn-primary more" href="/article/post/{{_id}}">
+                <div>Edit</div>
+                <div><i class="ion-ios-arrow-thin-right"></i></div>
+              </a>
+              {{/if}}
+         
+            </footer>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </div>
   </div>
+  {{/each}}
 </div>
-    {{/each}}
