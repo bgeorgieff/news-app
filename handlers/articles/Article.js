@@ -40,6 +40,14 @@ const articleModel = new Schema({
   views: {
     type: Number
   },
+  comments: [{
+    type: ObjectId,
+    ref: 'Comments'
+  }],
+  replies: [{
+    type: ObjectId,
+    ref: 'Replies'
+  }],
   category: [{
     type: ObjectId,
     ref: 'Categories'

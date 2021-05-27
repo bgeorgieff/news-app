@@ -1,7 +1,7 @@
 
 
 <div class="row">
-  {{#each article}}
+  {{#each articles}}
   <div class="col-md-6 col-sm-6 col-xs-12">
     <div class="row">
       <article class="article col-md-12">
@@ -14,13 +14,9 @@
           <div class="padding">
             <div class="detail">
               <div class="time">{{date}}</div>
-              <div>TEST AREA</div>
               {{#each category}}
-                {{category.name}}
+              <div class="category"><a href="category.html">{{this.name}}</a></div>
               {{/each}}
-              <div class="category"><a href="category.html">{{category.name}}</a></div>
-              <div class="category"><a href="category.html">{{category}}</a></div>
-              <div class="category"><a href="category.html">{{this.category.name}}</a></div>
             </div>
             <h2><a href="/article/post/{{_id}}">{{title}}</a></h2>
             <p>{{textSnippet}}</p>
@@ -30,13 +26,6 @@
                 <div>More</div>
                 <div><i class="ion-ios-arrow-thin-right"></i></div>
               </a>
-              {{#if isLoggedIn}}
-              <a class="btn btn-primary more" href="/article/post/{{_id}}">
-                <div>Edit</div>
-                <div><i class="ion-ios-arrow-thin-right"></i></div>
-              </a>
-              {{/if}}
-         
             </footer>
           </div>
         </div>
@@ -45,3 +34,8 @@
   </div>
   {{/each}}
 </div>
+<script>
+  const date = document.querySelector('.time')
+
+  console.log(date)
+</script>
