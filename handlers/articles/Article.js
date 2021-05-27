@@ -33,6 +33,10 @@ const articleModel = new Schema({
     type: String,
     required: true
   },
+  postCategory: {
+    type: String,
+    // required: true
+  },
   author: {
     type: ObjectId,
     ref: 'User'

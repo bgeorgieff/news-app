@@ -1,9 +1,8 @@
 const { validationResult } = require('express-validator')
 const Article = require('./Article')
-const {getCategories, getArticlesWithCategories } = require('../categories')
+const { getCategories } = require('../categories')
 const Categories = require('../categories/Categories')
-const comments = require('../comments')
-const { all } = require('../../routes/comments')
+const Replies = require('../comments/Replies')
 
 module.exports = {
   get: {
@@ -19,44 +18,45 @@ module.exports = {
     viewArticle(req, res, next) {
       const { id } = req.params
 
-      Article.findById(id).populate('author')
-                          .populate('category')
-                          .populate({ path: 'comments', populate: { path: 'author' }})
-                          .populate({ path: 'replies', populate: {path: 'author'}})
-                          .lean()
-                          .then((article) => {
+      Article.findById(id).lean()
+        .populate('author')
+        .populate('category')
+        .populate({ path: 'comments', populate: { path: 'author' }})
+        .populate({ path: 'comments', populate: [
+          { path: 'reply' }, 
+          { path: 'reply', populate: { path: 'author' }}]})
+        .then((article) => {
 
-          const views = article.views + 1
-          const {isAdmin} = req.user || false
+        const views = article.views + 1
+        const {isAdmin} = req.user || false
 
-          Article.findByIdAndUpdate(id, { views: views }).then(() => {
-            Article.find().sort({date:-1}).lean().then((articles) => {
-              const trendingArticles = [...articles]
-              const articles1 = [...articles]
-  
-              trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
-              articles1.splice(1)
-  
-              res.render('./posts/postView', {
-                isLoggedIn: req.user !== undefined,
-                articleTitle: article.title,
-                categories: article.category,
-                meta: article.meta,
-                img: article.img,
-                post: article.post,
-                views: article.views,
-                comments: article.comments,
-                trendingArticles,
-                articles1,
-                reply: article.replies,
-                date: article.date,
-                snippet: article.textSnippet,
-                author: article.author.username,
-                isAdmin,
-                id: id
-              })  
-            }) 
-         })
+
+        Article.findByIdAndUpdate(id, { views: views }).then((art, replies) => {
+          Article.find().sort({date:-1}).lean().then((articles) => {
+            const trendingArticles = [...articles]
+            const recentArticle = [...articles]
+
+            trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
+            recentArticle.splice(1)
+
+            res.render('./posts/postView', {
+              isLoggedIn: req.user !== undefined,
+              articleTitle: article.title,
+              categories: article.category,
+              meta: article.meta,
+              img: article.img,
+              post: article.post,
+              views: article.views,
+              comments: article.comments,
+              trendingArticles,
+              recentArticle,
+              author: article.replies.author,
+              date: article.date,
+              isAdmin,
+              id: id
+            })  
+          }) 
+        })
       })
     },
     async editArticleView(req, res, next) {
