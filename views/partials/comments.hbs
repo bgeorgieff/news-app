@@ -40,62 +40,66 @@ body {font-family: Arial, Helvetica, sans-serif;}
   cursor: pointer;
 }
 </style>
-<div class="item">
-{{#each comments}}
-  <div class="user">                                
-    <figure>
-      <img src="images/img01.jpg">
-    </figure>
-    <div class="details">
-      <h5 class="name">{{this.author.username}}</h5>
-      <div class="description">
-        {{comment}}
+{{#if comments}}
+<h2 class="title">Write a Response</h2>
+<div class="comment-list">
+  <div class="item">
+  {{#each comments}}
+    <div class="user">                                
+      <figure>
+        <img src="images/img01.jpg">
+      </figure>
+      <div class="details">
+        <h5 class="name">{{this.author.username}}</h5>
+        <div class="description">
+          {{comment}}
+        </div>
+        <footer>
+          <a href="#" class="myBtn">Reply</a>
+        </footer>
       </div>
-      <footer>
-        <a href="#" class="myBtn">Reply</a>
-      </footer>
     </div>
-  </div>
-  <div id="myModal1" class="modal1">
-    <div class="comments modal-content" id="modal-content">
-      <h2 class="title"><a href="#">Write a Response</a></h2>
-      <form class="row" action="/post/reply/{{_id}}" method="POST">
-        <div class="col-md-12">
-          <h3 class="title">Leave Your Response</h3>
-        </div>
-        <div class="form-group col-md-12">
-          <label for="message">Response <span class="required"></span></label>
-          <textarea class="form-control" name="message" placeholder="Write your response ..."></textarea>
-        </div>
-        <div class="form-group col-md-12">
-          <button class="btn btn-primary close" id="close">Send Response</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  {{/each}}
-  {{#each reply}}
-  <div class="reply-list">
-    <div class="item">
-      <div class="user">                                
-        <figure>
-          <img src="images/img01.jpg">
-        </figure>
-        <div class="details">
-          <h5 class="name">{{this.author.username}}</h5>
-          <div class="description">
-            {{this.comment}}
+    <div id="myModal1" class="modal1">
+      <div class="comments modal-content" id="modal-content">
+        <h2 class="title"><a href="#">Write a Response</a></h2>
+        <form class="row" action="/post/reply/{{_id}}" method="POST">
+          <div class="col-md-12">
+            <h3 class="title">Leave Your Response</h3>
           </div>
-          <footer>
-            <a href="#" class="myBtn">Reply</a>
-          </footer>
+          <div class="form-group col-md-12">
+            <label for="message">Response <span class="required"></span></label>
+            <textarea class="form-control" name="message" placeholder="Write your response ..."></textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <button class="btn btn-primary close" id="close">Send Response</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {{/each}}
+    {{#each reply}}
+    <div class="reply-list">
+      <div class="item">
+        <div class="user">                                
+          <figure>
+            <img src="images/img01.jpg">
+          </figure>
+          <div class="details">
+            <h5 class="name">{{this.author.username}}</h5>
+            <div class="description">
+              {{this.comment}}
+            </div>
+            <footer>
+              <a href="#" class="myBtn">Reply</a>
+            </footer>
+          </div>
         </div>
       </div>
     </div>
+    {{/each}} 
   </div>
-  {{/each}} 
 </div>
+{{/if}}
 <!-- Trigger/Open The Modal -->
 
 <!-- The Modal -->

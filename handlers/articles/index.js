@@ -3,6 +3,7 @@ const Article = require('./Article')
 const {getCategories, getArticlesWithCategories } = require('../categories')
 const Categories = require('../categories/Categories')
 const comments = require('../comments')
+const { all } = require('../../routes/comments')
 
 module.exports = {
   get: {
@@ -22,34 +23,40 @@ module.exports = {
                           .populate('category')
                           .populate({ path: 'comments', populate: { path: 'author' }})
                           .populate({ path: 'replies', populate: {path: 'author'}})
-                          .lean().then((article) => {
+                          .lean()
+                          .then((article) => {
 
-        const views = article.views + 1
-        const {isAdmin} = req.user || false
+          const views = article.views + 1
+          const {isAdmin} = req.user || false
 
-        console.log(article);
-        
-        Article.findByIdAndUpdate(id, {
-          views: views
-        })
-        .then(() => {
-          res.render('./posts/postView', {
-            isLoggedIn: req.user !== undefined,
-            title: article.title,
-            categories: article.category,
-            meta: article.meta,
-            img: article.img,
-            post: article.post,
-            views: article.views,
-            comments: article.comments,
-            reply: article.replies,
-            date: article.date,
-            snippet: article.textSnippet,
-            author: article.author.username,
-            isAdmin,
-            id: id
-          })  
-        })
+          Article.findByIdAndUpdate(id, { views: views }).then(() => {
+            Article.find().sort({date:-1}).lean().then((articles) => {
+              const trendingArticles = [...articles]
+              const articles1 = [...articles]
+  
+              trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
+              articles1.splice(1)
+  
+              res.render('./posts/postView', {
+                isLoggedIn: req.user !== undefined,
+                articleTitle: article.title,
+                categories: article.category,
+                meta: article.meta,
+                img: article.img,
+                post: article.post,
+                views: article.views,
+                comments: article.comments,
+                trendingArticles,
+                articles1,
+                reply: article.replies,
+                date: article.date,
+                snippet: article.textSnippet,
+                author: article.author.username,
+                isAdmin,
+                id: id
+              })  
+            }) 
+         })
       })
     },
     async editArticleView(req, res, next) {

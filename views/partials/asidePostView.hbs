@@ -1,0 +1,44 @@
+
+<aside>
+  <h1 class="aside-title">Recent Post</h1>
+  <div class="aside-body">
+    {{#each articles1}}
+    <article class="article-fw">
+      <div class="inner">
+        <figure>
+          <a href="/article/post/{{_id}}">												
+            <img src="{{imgUrl}}" alt="{{title}}">
+          </a>
+        </figure>
+        <div class="details">
+          <h1><a href="/article/post/{{_id}}">{{title}}</a></h1>
+          <p>
+          {{textSnippet}}
+          </p>
+          <div class="detail">
+            <div class="time">{{date}}</div>
+          </div>
+        </div>
+      </div>
+    </article>
+    {{/each}}
+    <div class="line"></div>
+    {{#each trendingArticles}}
+    <article class="article-mini">
+      <div class="inner">
+        <figure>
+          <a href="/article/post/{{_id}}">
+            <img src="{{imgUrl}}" alt="{{title}}">
+          </a>
+        </figure>
+        <div class="padding">
+          <h1><a href="/article/post/{{_id}}">{{this.title}}</a></h1>
+          <div class="detail">
+            <div class="time">{{date}}</div>
+          </div>
+        </div>
+      </div>
+    </article>
+    {{/each}}
+  </div>
+</aside>
