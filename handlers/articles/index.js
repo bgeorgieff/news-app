@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator')
 const Article = require('./Article')
 const {getCategories, getArticlesWithCategories } = require('../categories')
 const Categories = require('../categories/Categories')
+const comments = require('../comments')
 
 module.exports = {
   get: {
@@ -17,11 +18,17 @@ module.exports = {
     viewArticle(req, res, next) {
       const { id } = req.params
 
-      Article.findById(id).populate('author').lean().then((article) => {
-        const views = article.views + 1
+      Article.findById(id).populate('author')
+                          .populate('category')
+                          .populate({ path: 'comments', populate: { path: 'author' }})
+                          .populate({ path: 'replies', populate: {path: 'author'}})
+                          .lean().then((article) => {
 
+        const views = article.views + 1
         const {isAdmin} = req.user || false
 
+        console.log(article);
+        
         Article.findByIdAndUpdate(id, {
           views: views
         })
@@ -29,10 +36,13 @@ module.exports = {
           res.render('./posts/postView', {
             isLoggedIn: req.user !== undefined,
             title: article.title,
+            categories: article.category,
             meta: article.meta,
             img: article.img,
             post: article.post,
             views: article.views,
+            comments: article.comments,
+            reply: article.replies,
             date: article.date,
             snippet: article.textSnippet,
             author: article.author.username,

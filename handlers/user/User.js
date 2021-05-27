@@ -18,6 +18,10 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'Articles'
   }],
+	commentHistory: [{
+		type: ObjectId,
+		ref: 'Comments'
+	}],
 	isAdmin: {
 		type: Boolean,
 		default: false
