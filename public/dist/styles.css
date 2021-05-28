@@ -244,6 +244,31 @@ body {
   bottom: 5px;
 }
 
+
+.text-holder-comments {
+  width: 60%;
+  height: 45px;
+  padding-left: 10px;
+  overflow: hidden;
+  border-radius: 0.5em;
+  line-height: 45px;
+}
+
+.reply-to {
+  font-size: 18px !important;
+  text-align: left;
+}
+
+.reply-to-a {
+  font-size: 18px !important;
+  text-align: right;
+}
+
+.reply-holder {
+  padding: 10px;
+  text-align: right;
+}
+
 .carousel .carousel-indicators li {
   display: inline-block;
   width: 10px;

@@ -31,7 +31,7 @@ module.exports = {
         const {isAdmin} = req.user || false
 
 
-        Article.findByIdAndUpdate(id, { views: views }).then((art, replies) => {
+        Article.findByIdAndUpdate(id, { views: views }).then(() => {
           Article.find().sort({date:-1}).lean().then((articles) => {
             const trendingArticles = [...articles]
             const recentArticle = [...articles]
