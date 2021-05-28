@@ -1,12 +1,11 @@
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
 
 /* The Modal (background) */
 .modal-container {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 2; /* Sit on top */
-  padding-top: 200px; /* Location of the box */
+  padding-top: 300px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -22,22 +21,30 @@ body {font-family: Arial, Helvetica, sans-serif;}
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 45%;
 }
 
 /* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
+#close {
+  background-color: #fc624d;
+	padding: 10px;
+	color: white;
+  float: left;
   font-size: 28px;
   font-weight: bold;
+	border: 1px solid white;
+	float: left;
+	font-size: 18px;
 }
 
-.close:hover,
-.close:focus {
-  color: #000;
+#close:hover,
+#close:focus {
+  color: #fc624d;
   text-decoration: none;
   cursor: pointer;
+	background-color: white;
+	border: 1px solid #fc624d;
+	transition: 0.5s;
 }
 </style>
 <header class="primary">
@@ -101,8 +108,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
 							<li class="for-tablet nav-title"><a>Menu</a></li>
 							<li class="for-tablet"><a href="/user/login">Login</a></li>
 							<li class="for-tablet"><a href="/user/register">Register</a></li>
-							{{#each categoryName}}
-							<li><a href="category.html">Standard</a></li>
+							{{#each categories}}
+							<li><a href="category.html">{{postCategory}}</a></li>
 							{{/each}}
 							<li class="dropdown magz-dropdown"><a href="#">Dropdown Icons <i class="ion-ios-arrow-right"></i></a>
 								<ul class="dropdown-menu">
@@ -133,19 +140,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
 						<h3 class="title">Please write a category name</h3>
 					</div>
 					<div class="form-group col-md-12">
-						<textarea class="form-control" name="message" placeholder="Category name..."></textarea>
+						<textarea class="text-holder-create-category" name="message" placeholder="Category name..."></textarea>
 					</div>
 					<div class="form-group col-md-12">
-						<button class="btn btn-primary close" id="close">Send Response</button>
+						<button id="close">Save Category</button>
 					</div>
 				</form>
 			</div>
 		</div>
-
-		<script>
-
-		</script>
-
 
 
 		    {{!-- {{#if message}}
