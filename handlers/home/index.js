@@ -1,8 +1,9 @@
 const Articles = require('../articles/Article')
+const { getCategories } = require('../../utils/helpers')
 
 module.exports = {
   get: {
-    home(req, res, next) {
+    async home(req, res, next) {
 
       // PAGGINATION!!!!!!!!
       // Articles.paginate({}, {select: 'title', offset: 3, limit: 2 }).then((result) => {
@@ -12,7 +13,10 @@ module.exports = {
 
       const {isAdmin} = req.user || false
 
+      const categories = await getCategories()
+
       Articles.find().sort({date:-1}).populate('category').lean().then((article) => {
+        
         const trendingArticles = [...article]
         const articles = [...article]
 
@@ -24,6 +28,7 @@ module.exports = {
         res.render('home', {
           isLoggedIn: req.user !== undefined,
           articles,
+          categories,
           category: article.category,
           isAdmin,
           trendingArticles
