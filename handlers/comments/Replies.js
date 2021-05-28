@@ -19,20 +19,26 @@ const replySchema = new Schema({
   reply: [{
     type: ObjectId,
     ref: 'Comments'
-  }]
+  }],
+  commentId: {
+    type: ObjectId,
+    ref: 'Comments'
+  }
 })
 
 replySchema.pre('save', function(next) {
-  const commentId = this.reply
+  const commentId = this.commentId
   const replyId = this._id
   const articleId = this.article
+
+  // console.log(this);
 
   Promise.all([
     Articles.findOneAndUpdate({_id: articleId}, {$addToSet: {replies: replyId}}),
     Comments.findOneAndUpdate({_id: commentId}, {$addToSet: {reply: replyId}})
   ]).then(() => {
       next()
-    }).catch((err) => console.error(err))
+  }).catch((err) => console.error(err))
 
 })
 

@@ -17,7 +17,7 @@ module.exports = {
         const articles = [...article]
 
         trendingArticles.sort((a, b) => b.views - a.views)
-          .splice(3)
+          .splice(6)
 
         articles.splice(4)
 
