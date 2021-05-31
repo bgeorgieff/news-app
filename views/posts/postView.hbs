@@ -1,23 +1,4 @@
-{{!-- <div class="container">
-  test
-  {{{meta}}}
-  <h1>{{title}}</h1>
-  <img src="{{img}}" />
-  <div>
-    {{{post}}}
-  </div>
-  <div>
-    {{author}}
-  </div>
-</div>
-      {{#if isLoggedIn}}
-      <div>
-        <a href="/article/edit-post/{{id}}">Edit</a>
-        <a href="/article/delete/{{id}}">Delete</a>
-      </div>
-      {{/if}}
-{{> asideTrending}} --}}
-
+{{{meta}}}
 <section class="single">
 	<div class="container">
 		<div class="row">
@@ -57,7 +38,7 @@
 					<footer>
 						<div class="col">
 							<ul class="tags">
-								{{#each categories}}
+								{{#each tags}}
 								<li><a href="#">{{this.name}}</a></li>
 								{{/each}}
 							</ul>

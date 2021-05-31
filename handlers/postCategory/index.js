@@ -9,5 +9,10 @@ module.exports = {
         res.redirect('/home')
       })
     }
+  },
+  get: {
+    getCategory(req, res, next) {
+      console.log(req);
+    }
   }
 }

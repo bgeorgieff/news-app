@@ -34,8 +34,8 @@ const articleModel = new Schema({
     required: true
   },
   postCategory: {
-    type: String,
-    // required: true
+    type: ObjectId,
+    required: true
   },
   author: {
     type: ObjectId,
@@ -52,7 +52,7 @@ const articleModel = new Schema({
     type: ObjectId,
     ref: 'Replies'
   }],
-  category: [{
+  tags: [{
     type: ObjectId,
     ref: 'Categories'
   }]

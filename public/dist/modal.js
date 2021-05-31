@@ -5,7 +5,7 @@ const modal = document.getElementsByClassName("modal-container")[0];
 const btn = document.querySelectorAll(".myBtn");
 
 // Get the <span> element that closes the modal
-const close = document.getElementsByClassName("close")[0];
+const close = document.getElementById("close");
 
 btn.forEach((e) => {
   e.addEventListener('click', () => {
