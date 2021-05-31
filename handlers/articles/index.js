@@ -14,7 +14,8 @@ module.exports = {
       res.render('./posts/post-add', {
         isLoggedIn: req.user !== undefined,
         categories,
-        postCategory
+        postCategory,
+        title: 'Create Article'
       })
     }, 
     viewArticle(req, res, next) {
@@ -55,7 +56,8 @@ module.exports = {
               author: article.replies.author,
               date: article.date,
               isAdmin,
-              id: id
+              id: id,
+              title: article.title
             })  
           }) 
         })
@@ -66,7 +68,8 @@ module.exports = {
 
       const allCategories = await getCategories()
 
-      Article.findById(id).lean().populate('category').then((article) => {
+      Article.findById(id).lean().populate('tags').then((article) => {
+        console.log(article);
         res.render('./posts/editArticle', {
           isLoggedIn: req.user !== undefined,
           title: article.title,
@@ -75,7 +78,7 @@ module.exports = {
           post: article.post,
           author: article.author.username,
           id: id,
-          categories: article.category,
+          categories: article.tags,
           allCategories
         })
       })

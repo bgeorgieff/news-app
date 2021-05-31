@@ -1,62 +1,91 @@
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 <section class="py-5">
-  <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
   <div class="container">
     <h1 style="margin: 2%; text-align: center;">Edit Post</h1>
+    <div class="add-new-tag">
       <form method="POST" action="/article/create/create-category">
-        <div>
-          <label for="Category">Category</label>
-          <input type="text" name="newCategory" class="form-control" id="category" placeholder="New Category" value="New Category">
+        <div style="margin-bottom: 20px;">
+          <label for="Category" class="post-menu-headers">Create New Tags</label>
+          <input type="text" name="newCategory" class="form-control" id="tag" placeholder="New Tag">
         </div>
-        <button>Add Category</button>
-      </form>  
-            <select multiple name="addCategory">
-        <option value="" disabled selected>Select your option</option>
-        {{#if categories}}
-        {{#each categories}}
-        <option value="{{_id}}">{{name}}</option>
-        {{/each}}
-        {{else}}
-        <option value="noCategories">-- No Categories --</option>
-        {{/if}}
-      </select>
+        <button class="btn btn-primary" style="margin-bottom: 15px;">Create New Tag</button>
+      </form>   
+      <div style="padding-top: 1em;">
+        <div>
+          <label for="Category" class="post-menu-headers">Assigned Tags</label>
+          <div>
+            {{#if categories}}
+            {{#each categories}}
+            <span class="post-checks-container">
+              #{{name}} 
+            </span>
+            {{/each}}
+            {{else}}
+            <div>-- No Categories --</div>
+            {{/if}}
+          </div>
+        </div> 
+      </div>
+    </div>
     <form method="POST" action="/article/edit-post/{{id}}">
-
-      <select multiple name="allCategories">
-        <option value="" disabled selected>Select your option</option>
+      <div class="form-group">
+        <label for="Category" class="post-menu-headers">Select New Tags</label>
         {{#if allCategories}}
         {{#each allCategories}}
-        <option value="{{_id}}">{{name}}</option>
+        <span class="post-checks-container">
+          <input type="checkbox" name="addCategory" value="{{_id}}" />{{name}}
+        </span>
         {{/each}}
         {{else}}
-        <option value="noCategories">-- No Categories --</option>
+        <div>-- No Categories --</div>
         {{/if}}
-      </select>
-      <div class="form-group">
-        <label for="Title">{{title}}</label>
-        <input type="text" name="title" class="form-control" id="title" placeholder="title" value="Title">
       </div>
       <div class="form-group">
-        <label for="Header Image">{{img}}</label>
-        <input type="text" name="postImg" class="form-control" id="image" placeholder="image" value="image">
+        <label for="Category" class="post-menu-headers">Select Post Category</label>
+        <div>
+          {{#if postCategory}}
+          <span class="post-checks-container">
+          <input onclick="selectOne(this)" type="checkbox" name="postCategory" value="{{postCategory}}" />
+          {{postCategory}}</span>
+          {{/if}}
+        </div>
       </div>
       <div class="form-group">
-        <label for="Header Image">Text Snippet</label>
-        <input type="text" name="textSnippet" class="form-control" id="image" placeholder="image" value="image">
+        <label for="Title" class="post-menu-headers">Title</label>
+        <input type="text" name="title" class="form-control" id="title" placeholder="title">
       </div>
       <div class="form-group">
-        <textarea name="post">{{post}}</textarea>
+        <label for="Header Image" class="post-menu-headers">Header Image</label>
+        <input type="text" name="postImg" class="form-control" placeholder="image link">
       </div>
       <div class="form-group">
-        <label for="metadescription">{{meta}}</label>
-        <input type="text" name="noindexNofollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - noindex, nofollow">
-        <input type="text" name="indexFollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - index, follow">
-        <input type="text" name="noindexFollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - noindex, follow">
-        <input type="text" name="noindexNofollow" class="form-control" id="metadescription" placeholder="metadescription" value="robots - index, nofollow">
-        <input type="text" name="metaDescription" class="form-control" id="metadescription" placeholder="metadescription" value="meta description">
+        <textarea name="post"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="Robots" class="post-menu-headers">Google Robots Options</label>
+        <div class="robots-checks-container">
+          <input type="checkbox" name="noindexNofollow" placeholder="robots" value="robots - noindex, nofollow" />Robots - noindex, nofollow
+        </div>
+        <div class="robots-checks-container">
+          <input type="checkbox" name="indexFollow" placeholder="robots" value="robots - index, follow" />Robots - index, follow
+        </div>
+        <div class="robots-checks-container">
+          <input type="checkbox" name="noindexFollow" placeholder="robots" value="robots - noindex, follow" />Robots - noindex, follow
+        </div>
+        <div class="robots-checks-container">
+          <input type="checkbox" name="noindexNofollow" placeholder="robots" value="robots - index, nofollow" />Robots - index, nofollow
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Robots" class="post-menu-headers">Post Meta Description</label>
+        <input type="text" name="postMetaDescription" class="form-control" id="robots" placeholder="Meta Description">
+      </div>
+      <div class="form-group">
+        <label for="excerpt" class="post-menu-headers">Excerpt</label>
+        <input type="text" name="excerpt" class="form-control" placeholder="up to 250 symbols" maxlength="250">
       </div>
       <div>
-        <a href={{this.id}}>TEST BUTTON</a>
-        <button>Post</button>
+        <button class="btn btn-primary">Post</button>
       </div>
       <script>
         CKEDITOR.replace( 'post' );
@@ -64,3 +93,14 @@
     </form>
   </div>
 </section>
+<script>
+  function selectOne(checkbox) {
+    const allCheckBoxes = document.getElementsByName('postCategory')
+
+    allCheckBoxes.forEach((e) => {
+      if (e !== checkbox) {
+        return e.checked = false
+      }
+    })
+  }
+</script>
