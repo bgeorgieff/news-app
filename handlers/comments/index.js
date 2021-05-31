@@ -31,6 +31,10 @@ module.exports = {
       })
 
     },
+    // THIS PART OF THE CODE IS NOT IMPLEMENTED ON THE FRONT-END.
+    // WITH THE CURRENT IMPLEMENTATION YOU CAN REPLY ONLY TO A MAIN THREAD ON FRONT-END
+    // THE FUNCTIONS BELOW ALLOW REPLIES TO BE REPLIED TO. 
+    // WITH A REPLY THE INFO IS STORED AND UPDATED IN THE ARTICLE MODEL AND COMMENTS MODEL
     reToRe(req, res, next) {
       const {message} = req.body
       const {id} = req.params
@@ -45,7 +49,7 @@ module.exports = {
         .then((e) => {
           Comments.findOneAndUpdate({_id: e.commentsId}, {$addToSet: {reply: e._id}})
           .then(() => {
-            res.redirect(`/article/post/${reply.article}`)
+            res.redirect(`/article/post/${articleId}`)
           })
           .catch((err) => {
             console.error(err);

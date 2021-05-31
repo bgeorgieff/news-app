@@ -1,5 +1,5 @@
 {
-  "name": "restapi",
+  "name": "newapp",
   "version": "1.0.0",
   "description": "basic rest api template with crud operations",
   "main": "index.js",

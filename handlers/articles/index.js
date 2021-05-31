@@ -2,17 +2,19 @@ const { validationResult } = require('express-validator')
 const Article = require('./Article')
 const { getCategories } = require('../categories')
 const Categories = require('../categories/Categories')
-const Replies = require('../comments/Replies')
+const { getAllCategories, getCurrentCategory } = require('../../utils/helpers')
 
 module.exports = {
   get: {
     async postArticle(req, res, next) {
 
       const categories = await getCategories()
+      const postCategory = await getAllCategories()
 
       res.render('./posts/post-add', {
         isLoggedIn: req.user !== undefined,
         categories,
+        postCategory
       })
     }, 
     viewArticle(req, res, next) {
@@ -20,7 +22,7 @@ module.exports = {
 
       Article.findById(id).lean()
         .populate('author')
-        .populate('category')
+        .populate('tags')
         .populate({ path: 'comments', populate: { path: 'author' }})
         .populate({ path: 'comments', populate: [
           { path: 'reply' }, 
@@ -42,7 +44,7 @@ module.exports = {
             res.render('./posts/postView', {
               isLoggedIn: req.user !== undefined,
               articleTitle: article.title,
-              categories: article.category,
+              tags: article.tags,
               meta: article.meta,
               img: article.img,
               post: article.post,
@@ -80,45 +82,52 @@ module.exports = {
     }
   }, 
   post: {
-    postArticle(req, res, next) {
+    async postArticle(req, res, next) {
       const {
         title,
         post, 
-        metaDescription,
+        postMetaDescription,
+        postCategory,
         indexFollow,
         postImg,
         noindexFollow,
         noindexNofollow,
+        indexNofollow,
         addCategory,
-        textSnippet
+        excerpt
       } = req.body
 
+      let robots = ''
       const _id = req.user
       const date = new Date()
+      const currentCategory = await getCurrentCategory(postCategory)
 
-      // Text Snippet size = 250 symbols
-      // const textSnippety = {...textSnippet}.splice(5)
+      if (noindexFollow) {
+        robots += `<meta name="robots" content="follow, noindex">\n`
+      }
+
+      if (noindexNofollow) {
+        robots += `<meta name="robots" content="nofollow, noindex">\n`
+      }
+
+      if (indexFollow) {
+        robots += `<meta name="robots" content="index, follow">\n`
+      }
+
+      if (indexNofollow) {
+        robots += `<meta name="robots" content="index, nofollow">\n`
+      }
+
+      const meta = `<meta name="description" content="${postMetaDescription}"/>`
       
-      const robots = noindexFollow + indexFollow + noindexNofollow
-      
-      const meta = `<meta name="description" content="${metaDescription}"/>`
-      
-      Article.create({ 
-        date, 
-        title, 
-        postImg, 
-        post, 
-        meta, 
-        robots, 
-        author: _id, 
-        textSnippet,
-        views: 0,
-        category: addCategory
-      }).then(() => {
-          res.redirect('/home')
-        }).catch((err) => {
-          console.log(err);
-        })
+      Article
+      .create({ 
+        date, title, postImg, post, meta, robots: robots.trim(), author: _id, textSnippet: excerpt, 
+        views: 0, tags: addCategory, postCategory: currentCategory._id,})
+      .then(() => { res.redirect('/home') 
+      }).catch((err) => {
+        console.log(err);
+      })
     },
     addCategory(req, res, next) {
       const { newCategory } = req.body

@@ -1,5 +1,5 @@
 const Articles = require('../articles/Article')
-const { getCategories } = require('../../utils/helpers')
+const { getAllCategories } = require('../../utils/helpers')
 
 module.exports = {
   get: {
@@ -13,7 +13,7 @@ module.exports = {
 
       const {isAdmin} = req.user || false
 
-      const categories = await getCategories()
+      const categories = await getAllCategories()
 
       Articles.find().sort({date:-1}).populate('category').lean().then((article) => {
         

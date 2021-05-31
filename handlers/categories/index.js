@@ -7,13 +7,7 @@ const getCategories = async () => {
   return categories
 }
 
-const getArticlesWithCategories = async (id) => {
-  const article = await Article.findById(id).populate('category').lean()
-
-  return article
-}
 
 module.exports = {
   getCategories,
-  getArticlesWithCategories
 }

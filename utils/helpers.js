@@ -1,5 +1,5 @@
 const adminSecret = require('../config/config').adminSecret
-const postCategory = require('../handlers/postCategory/postCategory')
+const PostCategory = require('../handlers/postCategory/postCategory')
 
 const adminValidation = (data) => {
   if (data === adminSecret) {
@@ -9,12 +9,18 @@ const adminValidation = (data) => {
   }
 }
 
-const getCategories = () => {
-  const categories = postCategory.find().lean()
+const getAllCategories = () => {
+  const categories = PostCategory.find().lean()
   return categories
+}
+
+const getCurrentCategory = (name) => {
+  const current = PostCategory.findOne( {postCategory: name} ).lean()
+  return current
 }
 
 module.exports = {
   adminValidation,
-  getCategories
+  getAllCategories,
+  getCurrentCategory
 }
