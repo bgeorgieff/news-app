@@ -1,5 +1,5 @@
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 <section class="py-5">
-  <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
   <div class="container">
     <h1 style="margin: 2%; text-align: center;">Create Post</h1>
     <div class="add-new-tag">
@@ -17,7 +17,7 @@
     <form method="POST" action="/article/create">
       <div class="form-group">
         <div>
-          <label for="Category" class="post-menu-headers">Select Post Tags</label>
+          <label for="Category" class="post-menu-headers">Post Tags</label>
           <div>
             {{#if categories}}
             {{#each categories}}
