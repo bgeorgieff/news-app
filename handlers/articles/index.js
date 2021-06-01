@@ -3,6 +3,7 @@ const Article = require('./Article')
 const { getCategories } = require('../categories')
 const Categories = require('../categories/Categories')
 const { getAllCategories, getCurrentCategory } = require('../../utils/helpers')
+const PostCategories = require('../postCategory/postCategory')
 
 module.exports = {
   get: {
@@ -39,6 +40,7 @@ module.exports = {
             const trendingArticles = [...articles]
             const recentArticle = [...articles]
 
+            
             trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
             recentArticle.splice(1)
 
@@ -67,19 +69,45 @@ module.exports = {
       const { id } = req.params
 
       const allCategories = await getCategories()
+      const postCategories = await getAllCategories()
 
-      Article.findById(id).lean().populate('tags').then((article) => {
-        console.log(article);
+      Article.findById(id).lean()
+      .populate('tags')
+      .populate('postCategory')
+      .then((article) => {
+        
+        // Filter unassigned categories for edit menu
+        const assignedCategoryId = article.postCategory._id.valueOf().toString()
+
+        const unassignedCategories = postCategories.filter((category) => {
+          const postCategoryId = category._id.valueOf().toString()
+          return !assignedCategoryId.includes(postCategoryId)
+        })
+
+        // Filter unassigned tags for edit menu 
+        const assignedTagId = article.tags.map((e) => e._id.valueOf().toString())
+
+        const unassignedTags = allCategories.filter((tag) => {
+          const tagId = tag._id.valueOf().toString()
+          return !assignedTagId.includes(tagId)
+        })
+
+        // Extract the content from the saved meta tag
+        const metaConent = article.meta.replace(/^<meta +name="description" +content="([^"]+)" *\/>$/gm, '$1')
         res.render('./posts/editArticle', {
           isLoggedIn: req.user !== undefined,
           title: article.title,
-          meta: article.meta,
-          img: article.img,
+          meta: metaConent,
+          img: article.postImg,
           post: article.post,
           author: article.author.username,
           id: id,
+          postCategories: unassignedCategories,
           categories: article.tags,
-          allCategories
+          allCategories: unassignedTags,
+          textSnippet: article.textSnippet,
+          category: article.postCategory.postCategory,
+          excerpt: article.textSnippet
         })
       })
     }
@@ -144,27 +172,42 @@ module.exports = {
       const {
         title,
         post, 
-        metaDescription,
-        indexFollow,
+        postMetaDescription,
         postImg,
-        noindexFollow,
-        noindexNofollow,
-        allCategories,
-        textSnippet
+        tagsCategory,
+        excerpt,
+        postCategory
       } = req.body
 
-      const category = await getCategories()
+      const metaStr = `<meta name="description" content="${postMetaDescription}"/>`
 
-      const filteredCategories = category.filter(e => {
+      // Filter unused Tags
+      const tags = await getCategories()
+      
+      const filteredTags = tags.filter(e => {
+        const tagId = e._id.valueOf().toString()
+        return !tagId.includes(tagsCategory)
+      })
+      
+      // Filter unused Category
+      const postCategoryId = await getCurrentCategory(postCategory)
+      const allCategory = await getAllCategories()
+
+      const filteredCategories = allCategory.filter((e) => {
         const categoryId = e._id.valueOf().toString()
-        return !categoryId.includes(allCategories)
+        return !categoryId.includes(postCategoryId._id.valueOf().toString())
       })
 
-      Article.updateOne({_id: id}, {$set: {title, post, meta: metaDescription, textSnippet, postImg, category: allCategories}})
+      Article.updateOne({_id: id}, 
+        {$set: {title, post, meta: metaStr, textSnippet: excerpt, postImg,
+                tags: tagsCategory, postCategory: postCategoryId}})
         .then(() => {
+          // Update Tags and Categories
           Promise.all([
-            Categories.updateMany({_id: allCategories}, {$addToSet: {article: id}}),
-            Categories.updateMany({_id: filteredCategories}, {$pullAll: {article: [id]}})
+            Categories.updateMany({_id: tagsCategory}, {$addToSet: {article: id}}),
+            Categories.updateMany({_id: filteredTags}, {$pullAll: {article: [id]}}),
+            PostCategories.findByIdAndUpdate({ _id: postCategoryId._id }, {$addToSet: { articles: id}}),
+            PostCategories.updateMany({ _id: filteredCategories }, {$pullAll: { articles: [id]}})
           ]).then(() => {
           res.redirect('/home')
         })

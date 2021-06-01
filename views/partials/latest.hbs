@@ -1,5 +1,3 @@
-
-
 <div class="row">
   {{#each articles}}
   <div class="col-md-6 col-sm-6 col-xs-12">
@@ -14,6 +12,7 @@
           <div class="padding">
             <div class="detail">
               <div class="time">{{date}}</div>
+              <div class="category"><a href="/category/view/{{this.postCategory._id}}">{{this.postCategory.postCategory}}</a></div>
               {{#each category}}
               <div class="category"><a href="category.html">{{this.name}}</a></div>
               {{/each}}
@@ -21,7 +20,6 @@
             <h2><a href="/article/post/{{_id}}">{{title}}</a></h2>
             <p>{{textSnippet}}</p>
             <footer>
-              <a href="#" class="love"><i class="ion-android-favorite-outline"></i> <div>1263</div></a>
               <a class="btn btn-primary more" href="/article/post/{{_id}}">
                 <div>More</div>
                 <div><i class="ion-ios-arrow-thin-right"></i></div>

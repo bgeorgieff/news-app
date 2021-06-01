@@ -9,13 +9,13 @@ module.exports = {
       // Articles.paginate({}, {select: 'title', offset: 3, limit: 2 }).then((result) => {
       //   console.log(result);
       // })
-
-
+ 
       const {isAdmin} = req.user || false
 
       const categories = await getAllCategories()
 
-      Articles.find().sort({date:-1}).populate('category').lean().then((article) => {
+      Articles.find().sort({date:-1}).populate('category')
+                                      .populate('postCategory').lean().then((article) => {
         
         const trendingArticles = [...article]
         const articles = [...article]

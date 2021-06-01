@@ -12,7 +12,7 @@ module.exports = {
   },
   get: {
     getCategory(req, res, next) {
-      console.log(req);
+ 
     }
   }
 }
