@@ -1,9 +1,9 @@
-const { validationResult } = require('express-validator')
 const Article = require('./Article')
 const { getCategories } = require('../categories')
 const Categories = require('../categories/Categories')
-const { getAllCategories, getCurrentCategory } = require('../../utils/helpers')
+const { getAllCategories, getCurrentCategory, getRobotsString } = require('../../utils/helpers')
 const PostCategories = require('../postCategory/postCategory')
+const { validationResult } = require('express-validator')
 
 module.exports = {
   get: {
@@ -39,7 +39,6 @@ module.exports = {
           Article.find().sort({date:-1}).lean().then((articles) => {
             const trendingArticles = [...articles]
             const recentArticle = [...articles]
-
             
             trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
             recentArticle.splice(1)
@@ -94,6 +93,7 @@ module.exports = {
 
         // Extract the content from the saved meta tag
         const metaConent = article.meta.replace(/^<meta +name="description" +content="([^"]+)" *\/>$/gm, '$1')
+
         res.render('./posts/editArticle', {
           isLoggedIn: req.user !== undefined,
           title: article.title,
@@ -128,32 +128,34 @@ module.exports = {
         excerpt
       } = req.body
 
-      let robots = ''
       const _id = req.user
       const date = new Date()
       const currentCategory = await getCurrentCategory(postCategory)
+      
+      // Meta Robots String
+      const robots = getRobotsString(noindexFollow, noindexNofollow, indexFollow, indexNofollow)
 
-      if (noindexFollow) {
-        robots += `<meta name="robots" content="follow, noindex">\n`
-      }
+      const errors = validationResult(req)
 
-      if (noindexNofollow) {
-        robots += `<meta name="robots" content="nofollow, noindex">\n`
-      }
+      const categories = await getCategories()
+      const postSection = await getAllCategories()
 
-      if (indexFollow) {
-        robots += `<meta name="robots" content="index, follow">\n`
-      }
-
-      if (indexNofollow) {
-        robots += `<meta name="robots" content="index, nofollow">\n`
+      if(!errors.isEmpty()) {
+        res.render('./posts/post-add', {
+          message: errors.array()[0].msg,
+          isLoggedIn: req.user !== undefined,
+          categories,
+          postCategory: postSection,
+          title: 'Create Article'
+        })
+        return
       }
 
       const meta = `<meta name="description" content="${postMetaDescription}"/>`
       
       Article
       .create({ 
-        date, title, postImg, post, meta, robots: robots.trim(), author: _id, textSnippet: excerpt, 
+        date, title, postImg, post, meta, robots: robots, author: _id, textSnippet: excerpt, 
         views: 0, tags: addCategory, postCategory: currentCategory._id,})
       .then(() => { res.redirect('/home') 
       }).catch((err) => {

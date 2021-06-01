@@ -1,18 +1,25 @@
 const { body } = require('express-validator')
 
 module.exports = [
-    body('directions')
-        .custom((value) => {
-            if(!value.includes(' - ')) {
-                throw new Error('The input fields should include " - " between start and end point')
-            }
-            return true
-        }),
-    body('dateTime')
-        .custom((value) => {
-            if(!value.includes('-')) {
-                throw new Error('The date/time fields should include " - " between start and end point')
-            }
-            return true
-        })
+  body('postCategory')
+    .custom((value) => {
+      if(!value) {
+        throw new Error('You have to choose post Category')
+      }
+      return true
+  }),
+  body('title')
+    .custom((value) => {
+        if(!value) {
+          throw new Error('You have to choose post title')
+        }
+      return true
+  }),
+  body('post')
+    .custom((value) => {
+      if(!value) {
+        throw new Error('There must be a post ...')
+      }
+      return true
+  }),
 ]
