@@ -1,8 +1,7 @@
-  const User = require('./User')
-  const jwt = require('../../utils/jwt')
-  const { cookie } = require('../../config/config')
-  const { secret } = require('../../config/config') 
-  const { adminValidation } = require('../../utils/helpers')
+const User = require('./User')
+const jwt = require('../../utils/jwt')
+const { cookie } = require('../../config/config')
+const { adminValidation } = require('../../utils/helpers')
 
 module.exports = {
   get: {
@@ -22,6 +21,18 @@ module.exports = {
     login (req, res, next) {
       const {username, password} = req.body
 
+      if (!username) {
+        return res.render('./users/login', {
+          message: "You must use an existing user"
+        })
+      }
+
+      if (!password) {
+        return res.render('./users/login', {
+          message: "You must use your password"
+        })
+      }
+
       User.findOne({ username })
         .then((user) => {
           return Promise.all([user.passwordMatch(password), user])
@@ -37,7 +48,11 @@ module.exports = {
               .redirect('/')
         })
         .catch(err => {
-          console.log(err);
+          if (err) {
+            return res.render('./users/login', {
+              message: "There is no such user or passwords don't match"
+            })
+          }
         }) 
 
     },
@@ -52,6 +67,18 @@ module.exports = {
             message: "Your passwords don't match",
             oldDetails: {username, password, rePassword}
         })
+      }
+
+      if (!username) {
+        return res.render('./users/register.hbs', {
+            message: "You must choose a username"
+        })
+      }
+
+      if (!password) {
+          return res.render('./users/register.hbs', {
+              message: "You must choose a password"
+          })
       }
 
       User.create({username, password, isAdmin: isAuthenticated})

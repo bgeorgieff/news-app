@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const User = require('../user/User')
 const { Schema, model: Model } = mongoose
 const { String, ObjectId } = Schema.Types
-const mongoosePaginate = require('mongoose-paginate-v2')
 const Categories = require('../categories/Categories')
 const PostCategory = require('../postCategory/postCategory')
 
@@ -86,7 +85,5 @@ articleModel.pre('save', function(next) {
     next()
   }).catch((err) => console.error(err))
 })
-
-articleModel.plugin(mongoosePaginate)
 
 module.exports = new Model('Articles', articleModel)

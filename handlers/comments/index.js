@@ -21,7 +21,6 @@ module.exports = {
       const {id} = req.params
       const {_id} = req.user._id
 
-
       Comments.findById({_id: id}).lean().then((comment) => {
         const articleId = comment.article
         Replies.create({comment: message, author: _id, commentId: id, article: articleId})
