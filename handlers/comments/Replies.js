@@ -31,8 +31,6 @@ replySchema.pre('save', function(next) {
   const replyId = this._id
   const articleId = this.article
 
-  // console.log(this);
-
   Promise.all([
     Articles.findOneAndUpdate({_id: articleId}, {$addToSet: {replies: replyId}}),
     Comments.findOneAndUpdate({_id: commentId}, {$addToSet: {reply: replyId}})
