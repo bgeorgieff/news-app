@@ -29,7 +29,17 @@ commentSchema.pre('save', function(next) {
     .then(() => {
       next()
     })
-
 })
+
+// Apply user schema hereeeeee
+// commentSchema.pre('save', function(next) {
+//   const article = this.article
+//   const comment = this._id
+
+//   Article.findOneAndUpdate({_id: article}, {$addToSet: {comments: comment}})
+//     .then(() => {
+//       next()
+//     })
+// })
 
 module.exports = new Model('Comments', commentSchema)
