@@ -1,0 +1,53 @@
+		<section class="category">
+		  <div class="container">
+		    <div class="row">
+		      <div class="col-md-8 text-left">
+		        <div class="row">
+		          <div class="col-md-12">        
+		            <ol class="breadcrumb">
+		              <li><a href="/home">Home</a></li>
+		              <li class="active">{{categoryTitle}}</li>
+		            </ol>
+		            <h1 class="page-title">Category: {{categoryTitle}}</h1>
+		            <p class="page-subtitle">Showing all posts with category <i>{{categoryTitle}}</i></p>
+		          </div>
+		        </div>
+		        <div class="line"></div>
+		        <div class="row">
+							{{#each article}}
+		          <article class="col-md-12 article-list">
+		            <div class="inner">
+		              <figure>
+			              <a href="/article/post/{{_id}}">
+			                <img src="{{postImg}}" alt="{{title}}">
+		                </a>	
+		              </figure>
+		              <div class="details">
+		                <div class="detail">
+		                  <div class="category">
+		                   <a href="/category/view/{{postCategory._id}}">{{postCategory.postCategory}}</a>
+		                  </div>
+		                  <div class="time">{{date}}</div>
+		                </div>
+		                <h1><a href="/article/post/{{_id}}">{{title}}</a></h1>
+		                <p>
+		                  {{textSnippet}}
+		                </p>
+		                <footer>
+		                  <a class="btn btn-primary more" href="/article/post/{{_id}}">
+		                    <div>More</div>
+		                    <div><i class="ion-ios-arrow-thin-right"></i></div>
+		                  </a>
+		                </footer>
+		              </div>
+		            </div>
+		          </article>
+							{{/each}}
+		        </div>
+		      </div>
+		      <div class="col-md-4 sidebar">
+						{{> asidePostView}}
+		      </div>
+		    </div>
+		  </div>
+		</section>
