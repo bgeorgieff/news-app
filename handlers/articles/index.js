@@ -19,8 +19,9 @@ module.exports = {
         title: 'Create Article'
       })
     }, 
-    viewArticle(req, res, next) {
+    async viewArticle(req, res, next) {
       const { id } = req.params
+      const categories = await getAllCategories()
 
       Article.findById(id).lean()
         .populate('author')
@@ -28,12 +29,10 @@ module.exports = {
         .populate({ path: 'comments', populate: { path: 'author' }})
         .populate({ path: 'comments', populate: [
           { path: 'reply' }, 
-          { path: 'reply', populate: { path: 'author' }}]})
-        .then((article) => {
+          { path: 'reply', populate: { path: 'author' }}]}).then((article) => {
 
         const views = article.views + 1
         const {isAdmin} = req.user || false
-
 
         Article.findByIdAndUpdate(id, { views: views }).then(() => {
           Article.find().sort({date:-1}).lean().then((articles) => {
@@ -55,10 +54,12 @@ module.exports = {
               trendingArticles,
               recentArticle,
               author: article.replies.author,
+              postAuthor: article.author,
               date: article.date,
               isAdmin,
               id: id,
-              title: article.title
+              title: article.title,
+              categories
             })  
           }) 
         })
@@ -182,41 +183,65 @@ module.exports = {
       } = req.body
 
       const metaStr = `<meta name="description" content="${postMetaDescription}"/>`
-
-      // Filter unused Tags
       const tags = await getCategories()
-      
-      const filteredTags = tags.filter(e => {
-        const tagId = e._id.valueOf().toString()
-        return !tagId.includes(tagsCategory)
-      })
-      
-      // Filter unused Category
       const postCategoryId = await getCurrentCategory(postCategory)
       const allCategory = await getAllCategories()
+    
+      Article.findById({ _id: id }).populate('tags').lean().then((article) => {
 
-      const filteredCategories = allCategory.filter((e) => {
-        const categoryId = e._id.valueOf().toString()
-        return !categoryId.includes(postCategoryId._id.valueOf().toString())
-      })
+        // Filter unused Tags
+        const filteredTags = tags.filter((e) => {
+          const tagId = e._id.valueOf().toString()
+          return !tagsCategory.includes(tagId)
+        })
 
-      Article.updateOne({_id: id}, 
-        {$set: {title, post, meta: metaStr, textSnippet: excerpt, postImg,
-                tags: tagsCategory, postCategory: postCategoryId}})
+        // Filter unused Category
+        const filteredCategories = allCategory.filter((e) => {
+          const categoryId = e._id.valueOf().toString()
+          return !categoryId.includes(postCategoryId._id.valueOf().toString())
+        })
+        
+        // Validations
+        const errors = validationResult(req)
+
+        if(!errors.isEmpty()) {
+          res.render(`./posts/editArticle`, {
+            message: errors.array()[0].msg,
+            isLoggedIn: req.user !== undefined,
+            categories: article.tags,
+            allCategories: filteredTags,
+            postCategory,
+            title,
+            img: postImg,
+            post,
+            meta: postMetaDescription,
+            excerpt,
+            id: article._id,
+            category: postCategoryId.postCategory
+          })
+          return
+        }
+
+        Promise.all([
+          // Update Tags
+          Categories.updateMany({_id: tagsCategory}, {$addToSet: {article: article._id}}),
+          Categories.updateMany({_id: filteredTags}, {$pull: {article: article._id}}),
+          // Update Categories
+          PostCategories.findByIdAndUpdate({ _id: postCategoryId._id }, {$addToSet: { articles: article._id }}),
+          PostCategories.updateMany({ _id: filteredCategories }, {$pull: { articles: article._id}}),
+          // Update Article
+          Article.updateOne({_id: article._id}, 
+            {$set: {title, post, meta: metaStr, textSnippet: excerpt, postImg,
+                    tags: tagsCategory, postCategory: postCategoryId}})
+        ])
         .then(() => {
-          // Update Tags and Categories
-          Promise.all([
-            Categories.updateMany({_id: tagsCategory}, {$addToSet: {article: id}}),
-            Categories.updateMany({_id: filteredTags}, {$pullAll: {article: [id]}}),
-            PostCategories.findByIdAndUpdate({ _id: postCategoryId._id }, {$addToSet: { articles: id}}),
-            PostCategories.updateMany({ _id: filteredCategories }, {$pullAll: { articles: [id]}})
-          ]).then(() => {
-          res.redirect('/home')
+            res.redirect('/home')
         })
         .catch((err) => {
-          console.log(err)
+          console.error(err)
         })
-      })
+
+      })   
     }
   },
   delete: {

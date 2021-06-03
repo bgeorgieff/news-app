@@ -70,7 +70,7 @@ articleModel.pre('save', function(next) {
 
 articleModel.pre('save', function(next) {
   const article = this._id
-  const categoryAddArray = this.category
+  const categoryAddArray = this.tags
 
   Categories.updateMany({_id: categoryAddArray}, {$addToSet: {article: article}}).then(() => {
     next()

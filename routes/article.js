@@ -10,6 +10,6 @@ router.get('/delete/:id', isAuth(), handler.delete.deleteArticle)
 
 router.post('/create', isAuth(), validations, handler.post.postArticle)
 router.post('/create/create-category', isAuth(), handler.post.addCategory)
-router.post('/edit-post/:id', isAuth(), handler.put.editArticle)
+router.post('/edit-post/:id', isAuth(), validations, handler.put.editArticle)
 
 module.exports = router
