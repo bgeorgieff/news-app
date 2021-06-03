@@ -7,7 +7,6 @@ const getCategories = async () => {
   return categories
 }
 
-
 module.exports = {
   getCategories,
 }

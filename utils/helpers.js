@@ -1,5 +1,6 @@
 const adminSecret = require('../config/config').adminSecret
 const PostCategory = require('../handlers/postCategory/postCategory')
+
 // ADMIN VALIDATION
 const adminValidation = (data) => {
   if (data === adminSecret) {
@@ -8,16 +9,19 @@ const adminValidation = (data) => {
     return false
   }
 }
+
 // CATEGORY GETTER
 const getAllCategories = () => {
   const categories = PostCategory.find().lean()
   return categories
 }
+
 // CURRENT CATEGORY GETER
 const getCurrentCategory = (name) => {
   const current = PostCategory.findOne( {postCategory: name} ).lean()
   return current
 }
+
 // ROBOTS STRING 
 const getRobotsString = (noindexFollow, noindexNofollow, indexFollow, indexNofollow) => {
   let robots = ''

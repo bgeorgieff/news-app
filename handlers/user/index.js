@@ -61,7 +61,6 @@ module.exports = {
   
       const isAuthenticated = adminValidation(adminAuth)
 
-      // TODO IMPLEMENT MESSAGES ON WEBPAGE
       if(password !== rePassword) {
         return res.render('./users/register.hbs', {
             message: "Your passwords don't match",
@@ -87,6 +86,13 @@ module.exports = {
           res
           .cookie(cookie, token, {maxAge: 360000000})
           .redirect('/home')
+        })
+        .catch((err) => {
+          if(err) {
+            res.render('./users/register.hbs', {
+              message: "There's something wrong with this user...try another one"
+            })
+          }
         })
     }
   }

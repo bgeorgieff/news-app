@@ -6,16 +6,12 @@
 				{{> asidePostView}}
 			</div>
 			<div class="col-md-8">
-				<ol class="breadcrumb">
-					<li><a href="#">Home</a></li>
-					<li class="active">Film</li>
-				</ol>
 				<article class="article main-article">
 					<header>
 						<h1>{{articleTitle}}</h1>
 						<ul class="details">
 							<li>{{date}}</li>
-							<li>By <a href="#">{{author}}</a></li>
+							<li>By <a href="#">{{postAuthor.username}}</a></li>
 						</ul>
 					</header>
 					{{#if isLoggedIn}}
@@ -33,6 +29,7 @@
 					{{/if}}
 					{{/if}}
 					<div class="main">
+						{{{postImg}}}
 						{{{post}}}
 					</div>
 					<footer>
