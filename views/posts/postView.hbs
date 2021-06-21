@@ -29,14 +29,18 @@
 					{{/if}}
 					{{/if}}
 					<div class="main">
-						{{{postImg}}}
-						{{{post}}}
+						<div>
+							<img src="{{postImg}}" width=600px/>
+						</div>
+						<div>
+							{{{post}}}
+						</div>
 					</div>
 					<footer>
 						<div class="col">
 							<ul class="tags">
 								{{#each tags}}
-								<li><a href="#">{{this.name}}</a></li>
+								<li><a href="/category/tags/view-all/{{_id}}">{{this.name}}</a></li>
 								{{/each}}
 							</ul>
 						</div>

@@ -7,6 +7,8 @@ router.get('/create', isAuth(), handler.get.postArticle)
 router.get('/post/:id', isAuth(true), handler.get.viewArticle)
 router.get('/edit-post/:id', isAuth(), handler.get.editArticleView)
 router.get('/delete/:id', isAuth(), handler.delete.deleteArticle)
+router.get('/all-posts', isAuth(true), handler.get.viewAll)
+router.get('/result/view', isAuth(true), handler.get.searchResult)
 
 router.post('/create', isAuth(), validations, handler.post.postArticle)
 router.post('/create/create-category', isAuth(), handler.post.addCategory)
