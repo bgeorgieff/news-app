@@ -30,7 +30,6 @@ module.exports = {
             trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
             recentArticle.splice(1)
 
-
             res.render('./posts/category.hbs', {
               isLoggedIn: req.user !== undefined,
               isAdmin,
