@@ -5,28 +5,26 @@ module.exports = {
   get: {
     async home(req, res, next) {
 
-      // PAGGINATION!!!!!!!!
-      // Articles.paginate({}, {select: 'title', offset: 3, limit: 2 }).then((result) => {
-      //   console.log(result);
-      // })
- 
       const {isAdmin} = req.user || false
 
       const categories = await getAllCategories()
 
-      Articles.find().sort({date:-1}).populate('category')
-                                      .populate('postCategory').lean().then((article) => {
+      Articles.find().sort({date:-1})
+        .populate('category')
+        .populate('postCategory').lean().then((article) => {
         
         const trendingArticles = [...article]
         const articles = [...article]
 
-        trendingArticles.sort((a, b) => b.views - a.views)
-          .splice(6)
+        trendingArticles.sort((a, b) => b.views - a.views).splice(6)
 
-        articles.splice(4)
+        const latestArticle = articles.shift()
+        articles.splice(5)
+        // console.log(latestArticle);
 
         res.render('home', {
           isLoggedIn: req.user !== undefined,
+          latestArticle,
           articles,
           categories,
           category: article.category,

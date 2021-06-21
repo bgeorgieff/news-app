@@ -8,7 +8,6 @@ const { validationResult } = require('express-validator')
 module.exports = {
   get: {
     async postArticle(req, res, next) {
-
       const categories = await getCategories()
       const postCategory = await getAllCategories()
 
@@ -29,7 +28,8 @@ module.exports = {
         .populate({ path: 'comments', populate: { path: 'author' }})
         .populate({ path: 'comments', populate: [
           { path: 'reply' }, 
-          { path: 'reply', populate: { path: 'author' }}]}).then((article) => {
+          { path: 'reply', populate: { path: 'author' }}
+        ]}).then((article) => {
 
         const views = article.views + 1
         const {isAdmin} = req.user || false
