@@ -9,7 +9,7 @@ const categoryTypes = new Schema({
     },
     article: [{
       type: ObjectId,
-      ref: 'Article'
+      ref: 'Articles'
     }]
 })
 

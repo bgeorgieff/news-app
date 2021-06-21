@@ -1,5 +1,4 @@
 const Article = require('../articles/Article')
-const User = require('../user/User')
 const Comments = require('./Comments')
 const Replies = require('./Replies')
 const { getAllCategories } = require('../../utils/helpers')

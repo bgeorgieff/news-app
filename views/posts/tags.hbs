@@ -6,15 +6,15 @@
 					<div class="col-md-12">        
 						<ol class="breadcrumb">
 							<li><a href="/home">Home</a></li>
-							<li class="active">{{categoryTitle}}</li>
+							<li class="active">{{name}}</li>
 						</ol>
-						<h1 class="page-title">Category: {{categoryTitle}}</h1>
-						<p class="page-subtitle">Showing all posts with category <i>{{categoryTitle}}</i></p>
+						<h1 class="page-title">Category: {{name}}</h1>
+						<p class="page-subtitle">Showing all posts with tag <i>{{name}}</i></p>
 					</div>
 				</div>
 				<div class="line"></div>
 				<div class="row">
-					{{#each article}}
+					{{#each articles}}
 					<article class="col-md-12 article-list">
 						<div class="inner">
 							<figure>

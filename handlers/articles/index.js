@@ -18,6 +18,37 @@ module.exports = {
         title: 'Create Article'
       })
     }, 
+    searchResult(req, res, next) {
+      const {searchText} = req.query
+
+      Article.find().lean().then((article) => {
+        const articles = article.filter((e) => {
+          return e.title.toLowerCase().includes(searchText.toLowerCase())
+        })
+
+        res.render('./posts/searchResult', {
+          isLoggedIn: req.user !== undefined,
+          articles
+        })
+      })
+
+    },
+    viewAll(req, res, next) {
+      Article.find().populate('postCategory').sort({date: -1}).lean().then((articles) => {
+        const trendingArticles = [...articles]
+        const recentArticle = [...articles]
+
+        trendingArticles.sort((a, b) => {return b.views - a.views}).splice(4)
+        recentArticle.splice(1)
+
+        res.render('./posts/posts', {
+          isLoggedIn: req.user !== undefined,
+          articles,
+          trendingArticles,
+          recentArticle,
+        })
+      })
+    },
     async viewArticle(req, res, next) {
       const { id } = req.params
       const categories = await getAllCategories()
@@ -45,6 +76,7 @@ module.exports = {
             res.render('./posts/postView', {
               isLoggedIn: req.user !== undefined,
               articleTitle: article.title,
+              postImg: article.postImg,
               tags: article.tags,
               meta: article.meta,
               img: article.img,
@@ -85,7 +117,12 @@ module.exports = {
         })
 
         // Filter unassigned tags for edit menu 
-        const assignedTagId = article.tags.map((e) => e._id.valueOf().toString())
+        let assignedTagId
+        if (article.tags) {
+          assignedTagId = article.tags.map((e) => e._id.valueOf().toString())
+        } else {
+          assignedTagId = []
+        }
 
         const unassignedTags = allCategories.filter((tag) => {
           const tagId = tag._id.valueOf().toString()
@@ -93,12 +130,12 @@ module.exports = {
         })
 
         // Extract the content from the saved meta tag
-        const metaConent = article.meta.replace(/^<meta +name="description" +content="([^"]+)" *\/>$/gm, '$1')
+        const metaContent = article.meta.replace(/^<meta +name="description" +content="([^"]+)" *\/>$/gm, '$1')
 
         res.render('./posts/editArticle', {
           isLoggedIn: req.user !== undefined,
           title: article.title,
-          meta: metaConent,
+          meta: metaContent,
           img: article.postImg,
           post: article.post,
           author: article.author.username,

@@ -24,5 +24,5 @@ module.exports = [
       throw new Error('You must include meta description')
     }
     return true
-  }),
+  })
 ]
